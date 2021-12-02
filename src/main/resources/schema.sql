@@ -1,0 +1,1 @@
+CREATE TABLE mapping (id SERIAL PRIMARY KEY, email VARCHAR(50), wallet_id VARCHAR(255));
