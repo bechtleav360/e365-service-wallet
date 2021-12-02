@@ -12,6 +12,7 @@ pool:
 
 steps:
   - task: Maven@3
+    displayName: Package
     inputs:
       mavenPomFile: 'pom.xml'
       publishJUnitResults: true
@@ -19,6 +20,17 @@ steps:
       javaHomeOption: 'JDKVersion'
       jdkVersionOption: 1.11
       jdkArchitectureOption: x64
+      mavenVersionOption: 'Default'
+      mavenAuthenticateFeed: false
+      effectivePomSkip: false
+      sonarQubeRunAnalysis: false
+  - task: Maven@3
+    displayName: Build Docker Image
+    inputs:
+      mavenPomFile: 'pom.xml'
+      goals: 'spring-boot:build-image'
+      publishJUnitResults: false
+      javaHomeOption: 'JDKVersion'
       mavenVersionOption: 'Default'
       mavenAuthenticateFeed: false
       effectivePomSkip: false
