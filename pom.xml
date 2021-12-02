@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.bechtle.eagl</groupId>
-	<artifactId>UserMappingsService</artifactId>
+	<artifactId>eagl-service-mappings</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>UserMappingsService</name>
+	<name>User Wallet Mappings Service</name>
 	<description>Mappings for user and wallet ids</description>
 	<properties>
 		<java.version>11</java.version>
