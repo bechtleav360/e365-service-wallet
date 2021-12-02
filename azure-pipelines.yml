@@ -30,8 +30,4 @@ steps:
       mavenPomFile: 'pom.xml'
       goals: 'spring-boot:build-image'
       publishJUnitResults: false
-      javaHomeOption: 'JDKVersion'
-      mavenVersionOption: 'Default'
-      mavenAuthenticateFeed: false
-      effectivePomSkip: false
-      sonarQubeRunAnalysis: false
+      jdkVersionOption: 1.11
