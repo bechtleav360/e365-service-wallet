@@ -87,6 +87,13 @@
 				    <image>
 				      <name>ghcr.io/bechtleav360/${project.artifactId}:${project.version}</name>
 				    </image>
+				    <docker>
+				       <publishRegistry>
+						<username>pajoma</username>
+						<password>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</password>
+						<url>https://ghcr.io</url>
+					    </publishRegistry>
+				     </docker>
 				  </configuration>
 			</plugin>
 		</plugins>
