@@ -83,6 +83,11 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				 <configuration>
+				    <image>
+				      <name>ghcr.io/bechtleav360/${project.artifactId}:${project.version}</name>
+				    </image>
+				  </configuration>
 			</plugin>
 		</plugins>
 	</build>
