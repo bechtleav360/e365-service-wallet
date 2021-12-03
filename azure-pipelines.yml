@@ -31,3 +31,4 @@ steps:
       goals: 'spring-boot:build-image'
       publishJUnitResults: false
       jdkVersionOption: 1.11
+    # TODO: change repo name to gcr.io and push to Github Container Registry
