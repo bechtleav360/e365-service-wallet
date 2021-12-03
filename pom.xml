@@ -86,6 +86,7 @@
 				 <configuration>
 				    <image>
 				      <name>ghcr.io/bechtleav360/${project.artifactId}:${project.version}</name>
+				      <publish>true</publish>
 				    </image>
 				    <docker>
 				       <publishRegistry>
