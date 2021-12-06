@@ -90,8 +90,8 @@
 				    </image>
 				    <docker>
 				       <publishRegistry>
-						<username>pajoma</username>
-						<password>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</password>
+						<username>{env.GHCR_USER}</username>
+						<password>{env.GHCR_PASSWORD}</password>
 						<url>https://ghcr.io</url>
 					    </publishRegistry>
 				     </docker>
