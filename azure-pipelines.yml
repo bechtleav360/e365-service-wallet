@@ -3,6 +3,13 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
+
+parameters:
+  - name: GHCR_USER
+    type: string
+  - name: GHCR_PASSWORD
+    type: string
+    
 trigger:
 - main
 - develop
@@ -31,4 +38,4 @@ steps:
       goals: 'spring-boot:build-image'
       publishJUnitResults: false
       jdkVersionOption: 1.11
-    # TODO: change repo name to gcr.io and push to Github Container Registry
+  
