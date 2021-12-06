@@ -21,7 +21,7 @@ steps:
       mavenAuthenticateFeed: false
       effectivePomSkip: false
       sonarQubeRunAnalysis: false
-  - script: Publishing image with $(Build.BuildNumber) for user $(ghcr.user)
+  - script: echo "Publishing image with $(Build.BuildNumber) for user $(ghcr.user)"
   - task: Maven@3
     displayName: Build Docker Image
     env:
