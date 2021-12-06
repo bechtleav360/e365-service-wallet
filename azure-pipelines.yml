@@ -31,9 +31,12 @@ steps:
       mavenAuthenticateFeed: false
       effectivePomSkip: false
       sonarQubeRunAnalysis: false
-  - bash: echo $(GHCR_USER) 
+  - script: Publishing image with $(Build.BuildNumber) for user $(ghcr.user)
   - task: Maven@3
     displayName: Build Docker Image
+    env:
+      GHCR_USER: $(ghcr.user)
+      GHCR_PASSWORD: $(ghcr.password)
     inputs:
       mavenPomFile: 'pom.xml'
       goals: 'spring-boot:build-image'
