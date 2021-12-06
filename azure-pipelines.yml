@@ -1,14 +1,4 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
-
-parameters:
-  - name: GHCR_USER
-    type: string
-  - name: GHCR_PASSWORD
-    type: string
+# Don't forget to set the following variables for your pipeline: ghcr.user, ghcr.password
     
 trigger:
 - main
