@@ -22,11 +22,6 @@ steps:
       effectivePomSkip: false
       sonarQubeRunAnalysis: false
   - script: echo "Publishing image with $(Build.BuildNumber) for user $(ghcr.user)"
-  - task: Docker@2
-    displayName: "Docker Login"
-    inputs:
-      containerRegistry: ghcr_pajoma
-      command: 'login'
   - task: Maven@3
     displayName: Build Docker Image
     env:

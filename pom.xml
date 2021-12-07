@@ -96,8 +96,8 @@
                     </image>
                     <docker>
                         <publishRegistry>
-                            <username>{env.GHCR_USER}</username>
-                            <token>{env.GHCR_PASSWORD}</token>
+                            <username>${env.GHCR_USER}</username>
+                            <password>${env.GHCR_PASSWORD}</password>
                             <url>https://ghcr.io</url>
                         </publishRegistry>
                     </docker>
