@@ -89,6 +89,7 @@
                         <!-- with version <name>ghcr.io/bechtleav360/${project.artifactId}:${project.version}</name> -->
                         <name>ghcr.io/bechtleav360/${project.artifactId}</name>
                         <publish>true</publish>
+                        <verboseLogging>true</verboseLogging>
                         <env>
                             <BP_OCI_SOURCE>https://github.com/bechtleav360/eagl-service-walletmappings</BP_OCI_SOURCE>
                         </env>
@@ -96,7 +97,7 @@
                     <docker>
                         <publishRegistry>
                             <username>{env.GHCR_USER}</username>
-                            <password>{env.GHCR_PASSWORD}</password>
+                            <token>{env.GHCR_PASSWORD}</token>
                             <url>https://ghcr.io</url>
                         </publishRegistry>
                     </docker>
