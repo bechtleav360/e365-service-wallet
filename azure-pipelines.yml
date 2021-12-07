@@ -23,6 +23,7 @@ steps:
       sonarQubeRunAnalysis: false
   - script: echo "Publishing image with $(Build.BuildNumber) for user $(ghcr.user)"
   - task: Docker@2
+    displayName: "Docker Login"
     inputs:
       containerRegistry: ghcr_pajoma
       command: 'login'
@@ -36,5 +37,4 @@ steps:
       goals: 'spring-boot:build-image'
       publishJUnitResults: false
       jdkVersionOption: 1.11
-      mavenOptions: "-Xdebug -e"
   
