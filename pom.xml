@@ -10,10 +10,10 @@
         <!-- lookup parent from repository -->
     </parent>
     <groupId>com.bechtle.eagl</groupId>
-    <artifactId>eagl-service-mappings</artifactId>
+    <artifactId>eagl-service-wallet</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>User Wallet Mappings Service</name>
-    <description>Mappings for user and wallet ids</description>
+    <name>User Wallet Service</name>
+    <description>Provides access to user wallet data</description>
     <properties>
         <java.version>11</java.version>
         <spring-cloud.version>2021.0.0-RC1</spring-cloud.version>
@@ -91,7 +91,7 @@
                         <publish>true</publish>
                         <verboseLogging>true</verboseLogging>
                         <env>
-                            <BP_OCI_SOURCE>https://github.com/bechtleav360/eagl-service-walletmappings</BP_OCI_SOURCE>
+                            <BP_OCI_SOURCE>https://github.com/bechtleav360/eagl-service-wallet</BP_OCI_SOURCE>
                         </env>
                     </image>
                     <docker>
