@@ -7,6 +7,7 @@ import reactor.core.publisher.Mono;
 
 public interface MappingRepository extends ReactiveCrudRepository<Mapping, Long> {
 
-    @Query("SELECT * FROM mapping WHERE email = :value")
-    Mono<Mapping> findByEMail(String value);
+
+    @Query("SELECT * FROM mapping WHERE user_id = :value")
+    Mono<Mapping>  findByUserId(String uid);
 }

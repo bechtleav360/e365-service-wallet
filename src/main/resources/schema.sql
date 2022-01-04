@@ -1,1 +1,2 @@
-CREATE TABLE mapping (id SERIAL PRIMARY KEY, email VARCHAR(50), wallet_id VARCHAR(255));
+CREATE TABLE mapping (id SERIAL PRIMARY KEY, user_id VARCHAR(24), wallet_id VARCHAR(128), device_id VARCHAR(128));
+CREATE TABLE user_skill (id SERIAL PRIMARY KEY, user_id VARCHAR(24), label VARCHAR(100), status VARCHAR(20));
