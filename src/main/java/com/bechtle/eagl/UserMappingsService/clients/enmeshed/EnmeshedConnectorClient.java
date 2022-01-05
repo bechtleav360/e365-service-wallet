@@ -19,10 +19,10 @@ import java.time.temporal.ChronoUnit;
 @Service
 @Slf4j
 public class EnmeshedConnectorClient {
-    @Value("${endpoints.enmeshed.connector.url}")
+    @Value("${enmeshed.connector.url}")
     String url;
 
-    @Value("${endpoints.enmeshed.connector.apikey}")
+    @Value("${enmeshed.connector.apikey}")
     String apikey;
 
     private WebClient webClient;

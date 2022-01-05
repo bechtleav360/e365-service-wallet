@@ -1,53 +1,44 @@
 package com.bechtle.eagl.UserMappingsService.controller;
 
 import com.bechtle.eagl.UserMappingsService.model.Mapping;
-import com.bechtle.eagl.UserMappingsService.model.Relation;
-import com.bechtle.eagl.UserMappingsService.model.Skill;
-import com.bechtle.eagl.UserMappingsService.repositories.MappingRepository;
+import com.bechtle.eagl.UserMappingsService.services.WalletService;
 import com.bechtle.eagl.UserMappingsService.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Map;
-import java.util.Set;
-
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/wallet")
 public class WalletApi {
 
 
     private final UserService userService;
+    private final WalletService enmeshedConnectorService;
 
-    public WalletApi(@Autowired UserService userService) {
+    public WalletApi(@Autowired UserService userService,
+                     @Autowired WalletService enmeshedConnectorService) {
         this.userService = userService;
+        this.enmeshedConnectorService = enmeshedConnectorService;
     }
 
 
-    @GetMapping("/user")
+    @GetMapping("/mappings")
     public Flux<Mapping> list()  {
         return this.userService.listAllUsers();
     }
 
-    @GetMapping("/user/{userId}")
-    public Mono<Relation> get(@PathVariable String userId)  {
-        return this.userService.getUserProfileById(userId);
+
+
+    @GetMapping(value = "/mappings/token", produces = MediaType.IMAGE_PNG_VALUE)
+    public Mono<byte[]> generateToken() {
+        return this.enmeshedConnectorService.generateToken();
     }
 
-    @PostMapping("/user/{userId}/skills")
-    public Mono<Relation> create(@PathVariable String userId, @RequestBody Set<Skill> skills) {
-        return this.userService.addSkillsToUser(userId, skills)
-                .then(this.userService.getUserProfileById(userId));
 
-    }
 
-    @DeleteMapping("/{userId}")
-    public Mono<Void> delete(@PathVariable String userId) {
-        return this.userService.deleteUser(userId);
 
-    }
 
 
 }
