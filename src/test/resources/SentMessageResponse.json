@@ -1,0 +1,26 @@
+{
+  "result": {
+    "id": "MSG93tCf2jUexqw7GqGD",
+    "content": {
+      "@type": "Mail",
+      "body": "Bitte geben sie im nächsten Schritt den folgenden Code ein '1234'",
+      "cc": [],
+      "subject": "Willkommen",
+      "to": [
+        "id13mxfinUQPeq6cQfPLy7mn9LnBSv9XVcqL"
+      ]
+    },
+    "createdBy": "id13vBHTsxPY5ExcwttgGeV5hL8Nw5PoJ6PJ",
+    "createdByDevice": "DVCPi90gPspL38g9OJnN",
+    "recipients": [
+      {
+        "address": "id13mxfinUQPeq6cQfPLy7mn9LnBSv9XVcqL"
+      }
+    ],
+    "relationshipIds": [
+      "RELMZKQ9YjwTsvCF1wu5"
+    ],
+    "createdAt": "2022-01-10T20:08:39.549Z",
+    "attachments": []
+  }
+}

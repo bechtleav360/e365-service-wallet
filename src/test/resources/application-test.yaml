@@ -1,0 +1,33 @@
+#spring:
+#  datasource:
+#    url: jdbc:h2:file:/data/demo
+
+security:
+  api-key: "xxx"
+
+spring:
+  security:
+    user:
+      name: "user"
+      password: "password"
+
+enmeshed:
+  connector:
+    url: "http://eagl-enmeshed.germanywestcentral.azurecontainer.io/api/v1"
+    apikey: "xxx"
+  id:
+    rt: "xxx"
+
+arango:
+  url: "eagl-arango.germanywestcentral.azurecontainer.io"
+  user: "eagl_user"
+  password: "xxx"
+
+logging:
+  level:
+    com:
+      bechtle: DEBUG
+    org:
+      springframework:
+        security: TRACE
+

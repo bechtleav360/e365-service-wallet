@@ -2,6 +2,7 @@ package com.bechtle.eagl.UserMappingsService.controller;
 
 import com.bechtle.eagl.UserMappingsService.model.Relation;
 import com.bechtle.eagl.UserMappingsService.model.Skill;
+import com.bechtle.eagl.UserMappingsService.model.User;
 import com.bechtle.eagl.UserMappingsService.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,16 +25,23 @@ public class UserApi {
     }
 
     @GetMapping("/{userId}")
-    public Mono<Relation> get(@PathVariable String userId)  {
-        return this.userService.getUserProfileById(userId);
+    public Mono<User> get(@PathVariable String userId)  {
+        return this.userService.getUser(userId);
     }
 
+    @PostMapping("")
+    public Mono<User> create(@RequestBody User user)  {
+        return this.userService.createUser(user.getLogin());
+    }
+
+
+    /*
     @PostMapping("/{userId}/skills")
     public Mono<Relation> create(@PathVariable String userId, @RequestBody Set<Skill> skills) {
         return this.userService.addSkillsToUser(userId, skills)
                 .then(this.userService.getUserProfileById(userId));
 
-    }
+    }*/
 
     @DeleteMapping("/{userId}")
     public Mono<Void> delete(@PathVariable String userId) {

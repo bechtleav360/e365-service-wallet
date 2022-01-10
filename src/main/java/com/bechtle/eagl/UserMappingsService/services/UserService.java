@@ -1,45 +1,65 @@
 package com.bechtle.eagl.UserMappingsService.services;
 
 import com.bechtle.eagl.UserMappingsService.model.*;
-import com.bechtle.eagl.UserMappingsService.repositories.MappingRepository;
-import com.bechtle.eagl.UserMappingsService.repositories.UserSkillsRepository;
-import lombok.extern.java.Log;
+import com.bechtle.eagl.UserMappingsService.model.enums.UserFlags;
+import com.bechtle.eagl.UserMappingsService.model.events.UserDeletedEvent;
+import com.bechtle.eagl.UserMappingsService.model.events.UserFlaggedEvent;
+import com.bechtle.eagl.UserMappingsService.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
-import java.util.Set;
 
 @Service
 @Slf4j
 public class UserService {
 
-    final MappingRepository mappingRepository;
-    final UserSkillsRepository userSkillsRepository;
+    final UserRepository userRepository;
+    private ApplicationEventPublisher eventPublisher;
 
     public UserService(
-            @Autowired MappingRepository mappingRepository,
-            @Autowired UserSkillsRepository userSkillsRepository) {
-
-        this.mappingRepository = mappingRepository;
-        this.userSkillsRepository = userSkillsRepository;
+            @Autowired UserRepository userRepository,
+            @Autowired ApplicationEventPublisher eventPublisher) {
+        this.userRepository = userRepository;
+        this.eventPublisher = eventPublisher;
     }
 
 
-
-    public Flux<Mapping> listAllUsers() {
+    public Flux<User> listAllUsers() {
         log.debug("Listing all users");
-        return this.mappingRepository.findAll();
+        return Flux.fromIterable(this.userRepository.findAll());
     }
 
-    public Mono<Mapping> getUserMappingById(String userId) {
-        log.debug("Get Mapping for user {}", userId);
-        return this.mappingRepository.findByUserId(userId);
+    public Mono<User> getUser(String login) {
+        log.debug("Get user with login '{}'", login);
+        User example = User.builder().login(login).build();
+        return this.userRepository.findById(login)
+        //return this.userRepository.findOne(Example.of(example))
+                .map(Mono::just)
+                .orElseGet(Mono::empty);
+
     }
 
+    public Mono<User> createUser(String login) {
+        log.debug("Create user with login '{}'", login);
+        User built = User.builder()
+                .login(login)
+                .build();
+        try {
+
+            User saved = this.userRepository.save(built);
+            return Mono.just(saved);
+        } catch (Exception e) {
+            log.error("Failed to save user", e);
+            return Mono.error(e);
+        }
+
+
+    }
+/*
     public Mono<Relation> getUserProfileById(String userId) {
         log.debug("Get User Profile for user {}", userId);
         Mono<Mapping> mappingMono = this.mappingRepository.findByUserId(userId)
@@ -60,15 +80,27 @@ public class UserService {
         return this.userSkillsRepository.saveAll(userSkillFlux);
 
     }
+*/
+    public Mono<Void> deleteUser(String login) {
+        log.debug("Delete user with login '{}'", login);
+        return this.getUser(login).flatMap(user -> {
+            this.userRepository.delete(user);
+            eventPublisher.publishEvent(new UserDeletedEvent(user));
+            return Mono.empty();
+        });
 
-    public Mono<Void> deleteUser(String userId) {
-        log.debug("Delete user {}", userId);
-        Mono<Void> deleteMappingMono = this.mappingRepository.findByUserId(userId)
-                .flatMap(this.mappingRepository::delete);
-        Mono<Mono<Void>> deleteSkillsMono = this.userSkillsRepository.findByUserId(userId)
-                .collectList()
-                .map(this.userSkillsRepository::deleteAll);
-        return Mono.zip(deleteMappingMono, deleteSkillsMono).thenEmpty(Mono.empty());
+
+    }
+
+    public Mono<User> flagUser(String login, UserFlags flag) {
+        return this.getUser(login)
+                .map(user -> user.toBuilder().flag(flag).build())
+                .map(this.userRepository::save)
+                .map(user -> {
+                    eventPublisher.publishEvent(new UserFlaggedEvent(user, flag));
+                    return user;
+                });
+
 
     }
 }

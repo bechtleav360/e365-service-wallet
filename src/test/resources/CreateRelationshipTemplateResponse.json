@@ -1,0 +1,29 @@
+{
+  "id": "RLTilf5WCHFbJNuz8ilk",
+  "isOwn": true,
+  "createdBy": "id1MJD4bcpVXkPcXBr6bgv2Lq1sRo2vidAVc",
+  "createdByDevice": "DVCvoN8iDoONnsMOSY5u",
+  "createdAt": "2021-12-15T12:25:55.973Z",
+  "content": {
+    "attributes": [
+      {
+        "name": "Thing.name",
+        "value": "Lernpfade im Web"
+      }
+    ],
+    "request": {
+      "required": [],
+      "optional": [
+        {
+          "attribute": "Person.familyName"
+        },
+        {
+          "attribute": "Person.givenName"
+        }
+      ]
+    },
+    "skills": []
+  },
+  "expiresAt": "2022-01-01T00:00:00.000Z",
+  "maxNumberOfRelationships": 1
+}

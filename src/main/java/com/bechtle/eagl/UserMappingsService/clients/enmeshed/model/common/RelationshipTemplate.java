@@ -1,6 +1,7 @@
-package com.bechtle.eagl.UserMappingsService.clients.enmeshed.model;
+package com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -46,5 +47,7 @@ public class RelationshipTemplate {
     String createdByDevice;
     String createdAt;
     String expiresAt;
+
+    JsonNode content;
 
 }

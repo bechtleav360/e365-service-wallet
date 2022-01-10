@@ -1,4 +1,4 @@
-package com.bechtle.eagl.UserMappingsService.clients.enmeshed.model;
+package com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses;
 
 import lombok.Data;
 

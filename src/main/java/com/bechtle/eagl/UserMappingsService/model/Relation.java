@@ -1,18 +1,26 @@
 package com.bechtle.eagl.UserMappingsService.model;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.Singular;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 @Data
+@Builder
 public class Relation {
 
-    Mapping mapping;
-    List<UserSkill> skills;
+    String relationshipId;
+    String linkingCode;
+    String login;
 
-    public Relation(Mapping mapping, List<UserSkill> skills) {
-        this.mapping = mapping;
-        this.skills = skills;
+    @Singular
+    List<String> peers;
+
+    public String getAddress() {
+        return this.peers.stream()
+                .findFirst()
+                .orElseThrow(() -> new UnsupportedOperationException("Relation has no peer configured, address is available"));
     }
 }
