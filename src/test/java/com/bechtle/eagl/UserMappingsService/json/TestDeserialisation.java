@@ -18,7 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.io.IOException;
 
 @SpringBootTest
-@ActiveProfiles("local")
+@ActiveProfiles("test")
 public class TestDeserialisation {
 
     @Test

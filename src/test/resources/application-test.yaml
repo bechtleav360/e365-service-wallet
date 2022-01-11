@@ -8,8 +8,8 @@ security:
 spring:
   security:
     user:
-      name: "user"
-      password: "password"
+      name: "xxx"
+      password: "xxx"
 
 enmeshed:
   connector:
@@ -20,7 +20,7 @@ enmeshed:
 
 arango:
   url: "eagl-arango.germanywestcentral.azurecontainer.io"
-  user: "eagl_user"
+  user: "xxx"
   password: "xxx"
 
 logging:
