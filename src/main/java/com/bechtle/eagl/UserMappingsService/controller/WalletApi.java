@@ -5,6 +5,7 @@ import com.bechtle.eagl.UserMappingsService.model.User;
 import com.bechtle.eagl.UserMappingsService.model.enums.UserFlags;
 import com.bechtle.eagl.UserMappingsService.services.RelationshipService;
 import com.bechtle.eagl.UserMappingsService.services.UserService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import reactor.util.function.Tuple2;
 
 @RestController
 @RequestMapping("/api/wallet")
+@Api( tags = "Wallet")
 public class WalletApi {
 
 

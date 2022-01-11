@@ -8,14 +8,17 @@ import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.requests.Send
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.Changes;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.ListResult;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.Result;
+import io.netty.resolver.DefaultAddressResolverGroup;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClient;
 
 import javax.annotation.PostConstruct;
 import java.time.Instant;
@@ -37,8 +40,12 @@ public class EnmeshedConnectorClient {
 
     @PostConstruct
     public void initialize() {
+        // fix for https://github.com/reactor/reactor-netty/issues/1431
+        HttpClient httpClient = HttpClient.create().resolver(DefaultAddressResolverGroup.INSTANCE);
+
         this.webClient = WebClient
                 .builder()
+                .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .baseUrl(url)
                 .defaultHeader("X-API-KEY", apikey)
                 .build();

@@ -10,8 +10,8 @@ security:
 spring:
   security:
     user:
-      name: "user"
-      password: "password"
+      name: "xxx"
+      password: "xxx"
 
 enmeshed:
   connector:
@@ -22,7 +22,9 @@ enmeshed:
 
 logging:
   level:
+    com:
+      bechtle: TRACE
     org:
       springframework:
-        security: debug
+        security: INFO
 
