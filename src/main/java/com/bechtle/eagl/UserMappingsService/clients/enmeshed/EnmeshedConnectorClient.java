@@ -1,13 +1,13 @@
 package com.bechtle.eagl.UserMappingsService.clients.enmeshed;
 
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.Message;
-import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.MessageContent;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.Relationship;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.RelationshipTemplate;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.requests.SendMessageRequest;
+import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.ListResult;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.Result;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.requests.GenerateTokenRequest;
-import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.SyncResult;
+import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.Changes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +21,6 @@ import reactor.core.publisher.Mono;
 import javax.annotation.PostConstruct;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.concurrent.Flow;
 
 @Service
 @Slf4j
@@ -56,7 +55,7 @@ public class EnmeshedConnectorClient {
         return this.webClient.get()
                 .uri(uriBuilder -> uriBuilder.pathSegment("RelationshipTemplates").build())
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Result<RelationshipTemplate>>() {})
+                .bodyToMono(new ParameterizedTypeReference<ListResult<RelationshipTemplate>>() {})
                 .flatMapMany(result -> Flux.fromIterable(result.getResult()));
     }
 
@@ -80,15 +79,15 @@ public class EnmeshedConnectorClient {
 
     }
 
-    public Mono<SyncResult> sync() {
+    public Mono<Changes> sync() {
         log.debug("Requesting sync updates from Enmeshed Connector");
         // http://eagl-enmeshed.germanywestcentral.azurecontainer.io/api/v1/Account/Sync
         return this.webClient.post()
                 .uri(uriBuilder -> uriBuilder.pathSegment("Account", "Sync").build())
                 .contentType(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Result<SyncResult>>() {})
-                .map(result -> (SyncResult) result.getResult());
+                .bodyToMono(new ParameterizedTypeReference<Result<Changes>>() {})
+                .map(result -> (Changes) result.getResult());
 
     }
 
@@ -98,7 +97,7 @@ public class EnmeshedConnectorClient {
         return this.webClient.put()
                 .uri(uriBuilder -> uriBuilder.pathSegment("Relationships", relationshipId, "Changes", changeId, "Accept").build())
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new ObjectMapper().createObjectNode())
+                .bodyValue("{ \"content\": {} }")
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Result<Relationship>>() {})
                 .map(result -> (Relationship) result.getResult());
@@ -107,7 +106,7 @@ public class EnmeshedConnectorClient {
     public Mono<Message> sendMessage(SendMessageRequest request) {
         log.debug("Sending a message through Enmeshed Connector to recipient(s) '{}'", request.getRecipients());
 
-        return this.webClient.put()
+        return this.webClient.post()
                 .uri(uriBuilder -> uriBuilder.pathSegment("Messages").build())
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)

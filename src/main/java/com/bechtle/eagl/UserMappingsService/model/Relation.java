@@ -1,8 +1,11 @@
 package com.bechtle.eagl.UserMappingsService.model;
 
+import com.arangodb.springframework.annotation.ArangoId;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
+import org.springframework.data.annotation.Id;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,8 +14,15 @@ import java.util.Optional;
 @Builder
 public class Relation {
 
+    @ArangoId
+    @JsonIgnore
+    private String id;
+
+    @Id
     String relationshipId;
+
     String linkingCode;
+
     String login;
 
     @Singular

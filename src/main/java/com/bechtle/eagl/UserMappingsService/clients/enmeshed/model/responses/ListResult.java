@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class Result<T> {
+public class ListResult<T> {
 
-    T result;
+    List<T> result;
 }

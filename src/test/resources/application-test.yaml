@@ -26,8 +26,8 @@ arango:
 logging:
   level:
     com:
-      bechtle: DEBUG
+      bechtle: TRACE
     org:
       springframework:
-        security: TRACE
+        security: INFO
 

@@ -1,9 +1,11 @@
 package com.bechtle.eagl.UserMappingsService.services;
 
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.EnmeshedConnectorClient;
+import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.Relationship;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.RelationshipChange;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.RelationshipTemplate;
-import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.SyncResult;
+import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.enums.RelationshipChangeStatus;
+import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.Changes;
 import com.bechtle.eagl.UserMappingsService.model.Relation;
 import com.bechtle.eagl.UserMappingsService.model.events.*;
 import com.bechtle.eagl.UserMappingsService.repositories.RelationsRepository;
@@ -17,10 +19,12 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Profiles;
 import org.springframework.data.domain.Example;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.OptionalInt;
 import java.util.Random;
 
 @Service
@@ -47,7 +51,7 @@ public class RelationshipService {
     public Mono<Relation> associateLogin(String userId, String code) {
         log.debug("Get relation with linking code '{}'", code);
         Relation example = Relation.builder().linkingCode(code).build();
-        return this.relationsRepository.findOne(Example.of(example))
+        return this.relationsRepository.findByLinkingCode(code)
                 .map(Mono::just)
                 .orElseGet(Mono::empty)
                 .map(relation -> {
@@ -70,23 +74,28 @@ public class RelationshipService {
     }
 
     public Mono<Void> sync() {
-        Mono<SyncResult> sync = this.connectorClient.sync();
+        log.trace("Syncing changes");
+        Mono<Changes> sync = this.connectorClient.sync();
 
-        Mono<Void> changesFlux = sync.flatMapMany(result -> Flux.fromIterable(result.getRelationships()))
-                .map(relationship -> {
-                    for (RelationshipChange change : relationship.getChanges()) {
-                        log.info("Change detected with type {} in relation with id {}", change.getType(), relationship.getId());
+        Mono<Void> changesFlux = sync
+                .map(changes -> {
+                    for (Relationship relationship : changes.getRelationships()) {
+                        for (RelationshipChange change : relationship.getChanges()) {
+                            log.info("Change detected with type {} and status {} in relation with id {}", change.getType(), change.getStatus(), relationship.getId());
 
-                        switch (change.getType()) {
-                            case CREATION:
-                                eventPublisher.publishEvent(new RelationshipCreatedEvent(relationship, change));
-                                break;
-                            case TERMINATION:
-                                eventPublisher.publishEvent(new RelationshipTerminatedEvent(relationship, change));
-                                break;
+                            switch (change.getType()) {
+                                case CREATION:
+                                    eventPublisher.publishEvent(new RelationshipCreatedEvent(relationship, change));
+                                    break;
+                                case TERMINATION:
+                                    eventPublisher.publishEvent(new RelationshipTerminatedEvent(relationship, change));
+                                    break;
+                            }
                         }
                     }
-                    return relationship;
+
+
+                    return changes;
                 }).then();
 
         Mono<Void> messagesFlux = sync.flatMapMany(result -> Flux.fromIterable(result.getMessages()))
@@ -120,13 +129,18 @@ public class RelationshipService {
     @EventListener(RelationshipCreatedEvent.class)
     public void acceptCreatedRelationshipChange(RelationshipCreatedEvent event) {
 
+        if(event.getChange().getStatus() == RelationshipChangeStatus.REVOKED) {
+            log.info("A relationship creation has been revoked from the user");
+            return;
+        }
+
         // we create a linking code, which is sent to the user and which needs to be entered in the webapp
-        String code = new Random().ints(1000, 10000).findFirst().toString();
+        OptionalInt asInt = new Random().ints(1000, 10000).findFirst();
 
         this.connectorClient.acceptChange(event.getRelationship().getId(), event.getChange().getId())
                 .subscribe(relationship -> {
                     log.info("Accepted creation of new Relationship '{}'", event.getRelationship().getId());
-                    eventPublisher.publishEvent(new RelationshipAcceptedEvent(relationship, event.getChange(), code));
+                    eventPublisher.publishEvent(new RelationshipAcceptedEvent(relationship, event.getChange(), String.valueOf(asInt.orElse(5212))));
                 });
     }
 
@@ -152,6 +166,8 @@ public class RelationshipService {
         eventPublisher.publishEvent(new RelationshipStoredEvent(save));
 
     }
+
+
 
 
 }
