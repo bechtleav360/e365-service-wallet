@@ -115,10 +115,9 @@
                 <version>3.0.30</version>
                 <executions>
                     <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
+                        <phase>none</phase>
                         <configuration>
+                            <skip>true</skip>
                             <inputSpec>http://eagl-enmeshed.germanywestcentral.azurecontainer.io/docs/json</inputSpec>
                             <language>java</language>
                             <configOptions>
