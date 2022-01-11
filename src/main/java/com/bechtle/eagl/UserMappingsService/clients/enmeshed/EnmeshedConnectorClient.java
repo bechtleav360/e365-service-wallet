@@ -3,12 +3,11 @@ package com.bechtle.eagl.UserMappingsService.clients.enmeshed;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.Message;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.Relationship;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.RelationshipTemplate;
+import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.requests.GenerateTokenRequest;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.requests.SendMessageRequest;
+import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.Changes;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.ListResult;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.Result;
-import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.requests.GenerateTokenRequest;
-import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.Changes;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -87,7 +86,7 @@ public class EnmeshedConnectorClient {
                 .contentType(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Result<Changes>>() {})
-                .map(result -> (Changes) result.getResult());
+                .map(Result::getResult);
 
     }
 
@@ -100,7 +99,7 @@ public class EnmeshedConnectorClient {
                 .bodyValue("{ \"content\": {} }")
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Result<Relationship>>() {})
-                .map(result -> (Relationship) result.getResult());
+                .map(Result::getResult);
     }
 
     public Mono<Message> sendMessage(SendMessageRequest request) {
@@ -112,6 +111,6 @@ public class EnmeshedConnectorClient {
                 .bodyValue(request)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Result<Message>>() {})
-                .map(result -> (Message) result.getResult());
+                .map(Result::getResult);
     }
 }

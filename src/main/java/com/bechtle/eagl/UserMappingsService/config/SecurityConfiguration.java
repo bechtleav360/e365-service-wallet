@@ -4,22 +4,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
 import reactor.core.publisher.Mono;
 
-import java.util.*;
+import java.util.List;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -38,11 +32,8 @@ public class SecurityConfiguration {
         authenticationWebFilter.setServerAuthenticationConverter(authenticationConverter);
 
         return http
-                .authorizeExchange(spec -> {
-                    spec.pathMatchers("/api/**").authenticated()
-                            .anyExchange().permitAll();
-
-                })
+                .authorizeExchange(spec -> spec.pathMatchers("/api/**").authenticated()
+                        .anyExchange().permitAll())
                 .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .httpBasic().disable()
                 .csrf().disable()
@@ -80,9 +71,9 @@ public class SecurityConfiguration {
 
 
 
-    private class ApiKeyAuthentication extends AbstractAuthenticationToken {
+    private static class ApiKeyAuthentication extends AbstractAuthenticationToken {
 
-        private String apiKey;
+        private final String apiKey;
 
         public ApiKeyAuthentication(String apiKey) {
             super(null);

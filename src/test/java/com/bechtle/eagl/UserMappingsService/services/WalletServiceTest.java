@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -47,6 +47,7 @@ class WalletServiceTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @SuppressWarnings("Convert2Diamond")
     @Test
     public void testSync()  {
 
@@ -62,7 +63,7 @@ class WalletServiceTest {
         assertions.hasNotDroppedElements();
         assertEquals(1, applicationEvents
                 .stream(RelationshipCreatedEvent.class)
-                .filter(event -> ((RelationshipCreatedEvent) event).getRelationship().getId().length() > 1)
+                .filter(event -> event.getRelationship().getId().length() > 1)
                 .count());
                 /*
                 .expectComplete().verifyThenAssertThat().unused -> {

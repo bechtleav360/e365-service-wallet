@@ -1,6 +1,6 @@
 package com.bechtle.eagl.UserMappingsService.services;
 
-import com.bechtle.eagl.UserMappingsService.model.*;
+import com.bechtle.eagl.UserMappingsService.model.User;
 import com.bechtle.eagl.UserMappingsService.model.enums.UserFlags;
 import com.bechtle.eagl.UserMappingsService.model.events.UserDeletedEvent;
 import com.bechtle.eagl.UserMappingsService.model.events.UserFlaggedEvent;
@@ -8,7 +8,6 @@ import com.bechtle.eagl.UserMappingsService.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -17,8 +16,8 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class UserService {
 
-    final UserRepository userRepository;
-    private ApplicationEventPublisher eventPublisher;
+    private final UserRepository userRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public UserService(
             @Autowired UserRepository userRepository,

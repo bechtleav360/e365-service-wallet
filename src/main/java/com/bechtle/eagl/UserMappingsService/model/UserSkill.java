@@ -2,12 +2,10 @@ package com.bechtle.eagl.UserMappingsService.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
 
-
-import java.util.Set;
-
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class UserSkill extends Skill {
 
@@ -15,7 +13,6 @@ public class UserSkill extends Skill {
     @JsonIgnore
     Long id;
 
-    @Column("user_id")
     String userId;
 
     Status status;

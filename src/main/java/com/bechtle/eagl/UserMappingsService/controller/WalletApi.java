@@ -1,6 +1,5 @@
 package com.bechtle.eagl.UserMappingsService.controller;
 
-import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.requests.GenerateTokenRequest;
 import com.bechtle.eagl.UserMappingsService.model.Relation;
 import com.bechtle.eagl.UserMappingsService.model.User;
 import com.bechtle.eagl.UserMappingsService.model.enums.UserFlags;

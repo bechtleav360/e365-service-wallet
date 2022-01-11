@@ -2,8 +2,8 @@ package com.bechtle.eagl.UserMappingsService.json;
 
 
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.RelationshipTemplate;
-import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.Result;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.Changes;
+import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.Result;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;

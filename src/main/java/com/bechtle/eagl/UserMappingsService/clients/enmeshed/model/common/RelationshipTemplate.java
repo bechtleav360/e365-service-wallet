@@ -1,10 +1,7 @@
 package com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 /**
  *  {

@@ -7,16 +7,12 @@ import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.requests.Send
 import com.bechtle.eagl.UserMappingsService.model.events.MessageSentEvent;
 import com.bechtle.eagl.UserMappingsService.model.events.RelationshipAcceptedEvent;
 import com.bechtle.eagl.UserMappingsService.model.events.UserAssociatedEvent;
-import com.bechtle.eagl.UserMappingsService.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.endpoint.annotation.Selector;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Bundles functionality to exchange messages with user through enmeshed app
@@ -27,14 +23,11 @@ public class MessageService {
 
     private final EnmeshedConnectorClient connectorClient;
     private final ApplicationEventPublisher eventPublisher;
-    private ObjectMapper mapper;
 
     public MessageService(@Autowired EnmeshedConnectorClient connectorClient,
-                          @Autowired ApplicationEventPublisher eventPublisher,
-                          @Autowired ObjectMapper mapper) {
+                          @Autowired ApplicationEventPublisher eventPublisher) {
         this.connectorClient = connectorClient;
         this.eventPublisher = eventPublisher;
-        this.mapper = mapper;
     }
 
 
@@ -57,9 +50,7 @@ public class MessageService {
 
 
         this.connectorClient.sendMessage(request)
-                .subscribe(message -> {
-                    eventPublisher.publishEvent(new MessageSentEvent(content));
-                });
+                .subscribe(message -> eventPublisher.publishEvent(new MessageSentEvent(content)));
     }
 
 
@@ -79,8 +70,6 @@ public class MessageService {
 
 
         this.connectorClient.sendMessage(request)
-                .subscribe(message -> {
-                    eventPublisher.publishEvent(new MessageSentEvent(content));
-                });
+                .subscribe(message -> eventPublisher.publishEvent(new MessageSentEvent(content)));
     }
 }

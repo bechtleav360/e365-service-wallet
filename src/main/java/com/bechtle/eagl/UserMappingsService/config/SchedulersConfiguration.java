@@ -5,13 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import reactor.core.publisher.Mono;
 
 @Configuration
 @EnableScheduling
 public class SchedulersConfiguration {
 
-    private RelationshipService relationshipService;
+    private final RelationshipService relationshipService;
 
     public SchedulersConfiguration(@Autowired RelationshipService relationshipService) {
 
