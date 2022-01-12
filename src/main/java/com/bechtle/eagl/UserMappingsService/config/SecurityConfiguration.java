@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
@@ -13,6 +14,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
@@ -32,17 +35,6 @@ public class SecurityConfiguration {
 
 
 
-    @Bean
-    public SecurityWebFilterChain secureActuators(ReactiveAuthenticationManager authenticationManager, ServerHttpSecurity  http) {
-        return http
-                .httpBasic()
-                .authenticationManager(authenticationManager)
-                .and()
-                .authorizeExchange()
-                .matchers(EndpointRequest.to("info","env")).authenticated()
-                .matchers(EndpointRequest.to("health")).permitAll()
-                .and().build();
-    }
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http,
@@ -52,8 +44,12 @@ public class SecurityConfiguration {
         authenticationWebFilter.setServerAuthenticationConverter(authenticationConverter);
 
         return http
-                .authorizeExchange(spec -> spec.pathMatchers("/api/**").authenticated()
-                        .anyExchange().permitAll())
+                .authorizeExchange()
+                    .matchers(EndpointRequest.to("info","env", "logfile", "loggers", "metrics", "scheduledTasks")).hasAuthority("ADMIN")
+                    .matchers(EndpointRequest.to("health")).permitAll()
+                    .pathMatchers("/api/**").authenticated()
+                    .anyExchange().permitAll()
+                .and()
                 .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .httpBasic().disable()
                 .csrf().disable()
@@ -71,9 +67,7 @@ public class SecurityConfiguration {
             if (authentication == null) return Mono.empty();
 
             if(authentication instanceof UsernamePasswordAuthenticationToken) {
-                if(authentication.getCredentials().toString().equalsIgnoreCase("password")) {
-                    //
-                }
+                return Mono.just(authentication);
             }
 
             if (authentication.getPrincipal() != null
@@ -90,8 +84,10 @@ public class SecurityConfiguration {
     ServerAuthenticationConverter buildAuthenticationConverter() {
         return exchange -> {
             List<String> headers = exchange.getRequest().getHeaders().get(API_KEY_HEADER);
-            if (headers == null) return Mono.empty();
-            if (headers.size() == 0) return Mono.empty();
+            if (headers == null || headers.size() == 0) {
+                // lets fallback to username/password
+                return Mono.empty();
+            }
 
             return Mono.just(new ApiKeyAuthentication(headers.get(0)));
         };
