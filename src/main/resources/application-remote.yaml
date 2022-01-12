@@ -23,7 +23,7 @@ enmeshed:
 logging:
   level:
     com:
-      bechtle: TRACE
+      bechtle: DEBUG
     org:
       springframework:
         security: INFO

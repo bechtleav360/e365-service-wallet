@@ -91,6 +91,11 @@
                 <artifactId>arangodb-spring-data</artifactId>
                 <version>3.6.0</version>
             </dependency>
+            <dependency>
+                <groupId>com.arangodb</groupId>
+                <artifactId>arangodb-java-driver</artifactId>
+                <version>6.15.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

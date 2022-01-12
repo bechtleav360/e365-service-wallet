@@ -1,14 +1,13 @@
 package com.bechtle.eagl.UserMappingsService.services;
 
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.EnmeshedConnectorClient;
-import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.Relationship;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.RelationshipChange;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.RelationshipTemplate;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.enums.RelationshipChangeStatus;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.Changes;
-import com.bechtle.eagl.UserMappingsService.model.Relation;
+import com.bechtle.eagl.UserMappingsService.model.Relationship;
 import com.bechtle.eagl.UserMappingsService.model.events.*;
-import com.bechtle.eagl.UserMappingsService.repositories.RelationsRepository;
+import com.bechtle.eagl.UserMappingsService.repositories.RelationshipRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +17,9 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Profiles;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -33,12 +34,12 @@ public class RelationshipService {
     String relationshipTemplateId;
 
     private final EnmeshedConnectorClient connectorClient;
-    private final RelationsRepository relationsRepository;
+    private final RelationshipRepository relationsRepository;
     private final ApplicationEventPublisher eventPublisher;
 
 
     public RelationshipService(@Autowired EnmeshedConnectorClient connectorClient,
-                               @Autowired RelationsRepository relationsRepository,
+                               @Autowired RelationshipRepository relationsRepository,
                                @Autowired ApplicationEventPublisher eventPublisher) {
         this.connectorClient = connectorClient;
         this.relationsRepository = relationsRepository;
@@ -46,18 +47,18 @@ public class RelationshipService {
     }
 
 
-    public Mono<Relation> associateLogin(String userId, String code) {
+    public Mono<Relationship> associateLogin(String login, String code) {
         log.debug("Get relation with linking code '{}'", code);
-        Relation example = Relation.builder().linkingCode(code).build();
         return this.relationsRepository.findByLinkingCode(code)
                 .map(Mono::just)
                 .orElseGet(Mono::empty)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "User with login "+login+" does not exist")))
                 .map(relation -> {
-                    relation.setLogin(userId);
+                    relation.setLogin(login);
                     return this.relationsRepository.save(relation);
                 })
                 .map(relation -> {
-                    eventPublisher.publishEvent(new UserAssociatedEvent(relation));
+                    eventPublisher.publishEvent(new RelationshipLinkedEvent(relation));
                     return relation;
                 });
 
@@ -77,7 +78,7 @@ public class RelationshipService {
 
         Mono<Void> changesFlux = sync
                 .map(changes -> {
-                    for (Relationship relationship : changes.getRelationships()) {
+                    for (com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.Relationship relationship : changes.getRelationships()) {
                         for (RelationshipChange change : relationship.getChanges()) {
                             log.info("Change detected with type {} and status {} in relation with id {}", change.getType(), change.getStatus(), relationship.getId());
 
@@ -154,12 +155,12 @@ public class RelationshipService {
 
     @EventListener(RelationshipAcceptedEvent.class)
     public void saveRelation(RelationshipAcceptedEvent event) {
-        Relation build = Relation.builder()
+        Relationship build = Relationship.builder()
                 .linkingCode(event.getLinkingCode())
                 .relationshipId(event.getRelationship().getId())
                 .peer(event.getRelationship().getPeer())
                 .build();
-        Relation save = this.relationsRepository.save(build);
+        Relationship save = this.relationsRepository.save(build);
 
         eventPublisher.publishEvent(new RelationshipStoredEvent(save));
 

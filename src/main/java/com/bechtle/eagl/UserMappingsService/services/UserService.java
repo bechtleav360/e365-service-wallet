@@ -8,7 +8,9 @@ import com.bechtle.eagl.UserMappingsService.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -34,11 +36,10 @@ public class UserService {
 
     public Mono<User> getUser(String login) {
         log.debug("Get user with login '{}'", login);
-        User example = User.builder().login(login).build();
         return this.userRepository.findById(login)
-        //return this.userRepository.findOne(Example.of(example))
                 .map(Mono::just)
-                .orElseGet(Mono::empty);
+                .orElseGet(Mono::empty)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "User with login "+login+" does not exist")));
 
     }
 
@@ -48,7 +49,6 @@ public class UserService {
                 .login(login)
                 .build();
         try {
-
             User saved = this.userRepository.save(built);
             return Mono.just(saved);
         } catch (Exception e) {

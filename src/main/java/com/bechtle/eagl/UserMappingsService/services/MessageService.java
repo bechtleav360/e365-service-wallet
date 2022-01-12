@@ -6,8 +6,7 @@ import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.enums.Content
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.requests.SendMessageRequest;
 import com.bechtle.eagl.UserMappingsService.model.events.MessageSentEvent;
 import com.bechtle.eagl.UserMappingsService.model.events.RelationshipAcceptedEvent;
-import com.bechtle.eagl.UserMappingsService.model.events.UserAssociatedEvent;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.bechtle.eagl.UserMappingsService.model.events.RelationshipLinkedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -55,7 +54,7 @@ public class MessageService {
 
 
     @EventListener
-    public void sendWelcomeMessage(UserAssociatedEvent event) {
+    public void sendWelcomeMessage(RelationshipLinkedEvent event) {
 
         MessageContent content = MessageContent.builder()
                 .type(ContentType.MAIL)

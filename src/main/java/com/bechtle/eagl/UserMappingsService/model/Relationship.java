@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class Relation {
+public class Relationship {
 
     @ArangoId
     @JsonIgnore

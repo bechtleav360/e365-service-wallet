@@ -18,7 +18,7 @@ public class SchedulersConfiguration {
     }
 
 
-    @Scheduled(fixedDelay = 20000)
+    @Scheduled(fixedDelay = 60000)
     public void regularSync() {
         this.relationshipService.sync().subscribe();
     }

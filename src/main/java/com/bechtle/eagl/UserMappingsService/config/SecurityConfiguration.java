@@ -1,13 +1,19 @@
 package com.bechtle.eagl.UserMappingsService.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
@@ -23,6 +29,20 @@ public class SecurityConfiguration {
     String key;
 
     private static final String API_KEY_HEADER = "X-API-KEY";
+
+
+
+    @Bean
+    public SecurityWebFilterChain secureActuators(ReactiveAuthenticationManager authenticationManager, ServerHttpSecurity  http) {
+        return http
+                .httpBasic()
+                .authenticationManager(authenticationManager)
+                .and()
+                .authorizeExchange()
+                .matchers(EndpointRequest.to("info","env")).authenticated()
+                .matchers(EndpointRequest.to("health")).permitAll()
+                .and().build();
+    }
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http,
@@ -43,10 +63,18 @@ public class SecurityConfiguration {
 
     }
 
+
+
     @Bean
     public ReactiveAuthenticationManager buildAuthenticationManager() {
         return authentication -> {
             if (authentication == null) return Mono.empty();
+
+            if(authentication instanceof UsernamePasswordAuthenticationToken) {
+                if(authentication.getCredentials().toString().equalsIgnoreCase("password")) {
+                    //
+                }
+            }
 
             if (authentication.getPrincipal() != null
                     && authentication.getCredentials().toString().equalsIgnoreCase(this.key)
