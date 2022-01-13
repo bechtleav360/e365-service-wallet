@@ -1,8 +1,8 @@
 package com.bechtle.eagl.UserMappingsService.services;
 
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.EnmeshedConnectorClient;
-import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.Message;
-import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.Relationship;
+import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.ChangeMessage;
+import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.ChangeRelationship;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.Changes;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.responses.Result;
 import com.bechtle.eagl.UserMappingsService.model.events.RelationshipCreatedEvent;
@@ -52,8 +52,8 @@ class WalletServiceTest {
     public void testSync()  {
 
         Mockito.when(enmeshedConnectorClient.sync()).thenReturn(this.loadResult(new TypeReference<Result<Changes>>() {}, "json/SyncResponse.json"));
-        Mockito.when(enmeshedConnectorClient.acceptChange(Mockito.anyString(), Mockito.anyString())).thenReturn(this.loadResult(new TypeReference<Result<Relationship>>() {}, "json/AcceptResponse.json"));
-        Mockito.when(enmeshedConnectorClient.sendMessage(Mockito.any())).thenReturn(this.loadResult(new TypeReference<Result<Message>>() {}, "json/SentMessageResponse.json"));
+        Mockito.when(enmeshedConnectorClient.acceptChange(Mockito.anyString(), Mockito.anyString())).thenReturn(this.loadResult(new TypeReference<Result<ChangeRelationship>>() {}, "json/AcceptResponse.json"));
+        Mockito.when(enmeshedConnectorClient.sendMessage(Mockito.any())).thenReturn(this.loadResult(new TypeReference<Result<ChangeMessage>>() {}, "json/SentMessageResponse.json"));
 
         StepVerifier.Assertions assertions = StepVerifier.create(walletService.sync())
                 .thenAwait(Duration.of(5, ChronoUnit.SECONDS))

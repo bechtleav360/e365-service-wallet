@@ -39,7 +39,7 @@ public class WalletApi {
     }
 
     @GetMapping(value = "/sync")
-    public Mono<Void> sync() {
+    public Mono<Boolean> sync() {
         log.debug("(Request) Sync changes");
         return this.relationshipService.sync();
     }

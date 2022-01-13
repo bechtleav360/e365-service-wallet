@@ -1,6 +1,8 @@
 package com.bechtle.eagl.UserMappingsService.services;
 
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.EnmeshedConnectorClient;
+import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.ChangeMessage;
+import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.ChangeRelationship;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.RelationshipChange;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.RelationshipTemplate;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.enums.RelationshipChangeStatus;
@@ -72,13 +74,12 @@ public class RelationshipService {
                 .flatMap(this.connectorClient::getTokenImage);
     }
 
-    public Mono<Void> sync() {
+    public Mono<Boolean> sync() {
         log.trace("Syncing changes");
-        Mono<Changes> sync = this.connectorClient.sync();
-
-        Mono<Void> changesFlux = sync
+        return this.connectorClient
+                .sync()
                 .map(changes -> {
-                    for (com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.Relationship relationship : changes.getRelationships()) {
+                    for (ChangeRelationship relationship : changes.getRelationships()) {
                         for (RelationshipChange change : relationship.getChanges()) {
                             log.info("Change detected with type {} and status {} in relation with id {}", change.getType(), change.getStatus(), relationship.getId());
 
@@ -92,18 +93,12 @@ public class RelationshipService {
                             }
                         }
                     }
-
-
+                    for (ChangeMessage message : changes.getMessages()) {
+                        eventPublisher.publishEvent(new MessageReceivedEvent(message));
+                    }
                     return changes;
-                }).then();
-
-        Mono<Void> messagesFlux = sync.flatMapMany(result -> Flux.fromIterable(result.getMessages()))
-                .map(message -> {
-                    eventPublisher.publishEvent(new MessageReceivedEvent(message));
-                    return message;
-                }).then();
-
-        return Mono.zip(changesFlux, messagesFlux).thenEmpty(Mono.empty());
+                })
+                .then(Mono.just(true));
 
     }
 

@@ -1,7 +1,7 @@
 package com.bechtle.eagl.UserMappingsService.clients.enmeshed;
 
-import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.Message;
-import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.Relationship;
+import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.ChangeMessage;
+import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.ChangeRelationship;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.common.RelationshipTemplate;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.requests.GenerateTokenRequest;
 import com.bechtle.eagl.UserMappingsService.clients.enmeshed.model.requests.SendMessageRequest;
@@ -97,7 +97,7 @@ public class EnmeshedConnectorClient {
 
     }
 
-    public Mono<Relationship> acceptChange(String relationshipId, String changeId) {
+    public Mono<ChangeRelationship> acceptChange(String relationshipId, String changeId) {
         log.debug("Accepting a change update from Enmeshed Connector");
 
         return this.webClient.put()
@@ -105,11 +105,11 @@ public class EnmeshedConnectorClient {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue("{ \"content\": {} }")
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Result<Relationship>>() {})
+                .bodyToMono(new ParameterizedTypeReference<Result<ChangeRelationship>>() {})
                 .map(Result::getResult);
     }
 
-    public Mono<Message> sendMessage(SendMessageRequest request) {
+    public Mono<ChangeMessage> sendMessage(SendMessageRequest request) {
         log.debug("Sending a message through Enmeshed Connector to recipient(s) '{}'", request.getRecipients());
 
         return this.webClient.post()
@@ -117,7 +117,7 @@ public class EnmeshedConnectorClient {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Result<Message>>() {})
+                .bodyToMono(new ParameterizedTypeReference<Result<ChangeMessage>>() {})
                 .map(Result::getResult);
     }
 }

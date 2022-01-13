@@ -31,7 +31,7 @@ az container create --resource-group <<resource-group>> --name <<container-name>
  --image ghcr.io/bechtleav360/eagl-service-wallet:latest --dns-name-label <<dns-name>> \ 
  --ports 8080 --os-type Linux --protocol TCP --registry-username <<user to access registry>> \
  --registry-password <<password to access registry>> --environment-variables \
- SPRING_APPLICATION_JSON='{ "spring": { "profiles": { "active": "remote" }, \
+     SPRING_APPLICATION_JSON='{ "spring": { "profiles": { "active": "remote" }, \
  "security": { "user": {  "name": "xxx",  "password": "xxx" } } }, \
  "security": { "api-key": "xxx" }, \
  "arango": { "url": "xxx", "user": "xxx", "password": "xxx" }, \
