@@ -86,7 +86,7 @@ public class EnmeshedConnectorClient {
     }
 
     public Mono<Changes> sync() {
-        log.debug("Requesting sync updates from Enmeshed Connector");
+        log.debug("Syncing changes from Enmeshed Backbone");
         // http://eagl-enmeshed.germanywestcentral.azurecontainer.io/api/v1/Account/Sync
         return this.webClient.post()
                 .uri(uriBuilder -> uriBuilder.pathSegment("Account", "Sync").build())

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableArangoRepositories(basePackages = "com.bechtle.eagl")
+@EnableArangoRepositories(basePackages = "com.bechtle.eagl.UserMappingsService.repositories")
 public class ArangoConfiguration implements com.arangodb.springframework.config.ArangoConfiguration {
     @Value("${arango.url}")
     String url;
