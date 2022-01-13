@@ -57,6 +57,7 @@ class WalletServiceTest {
 
         StepVerifier.Assertions assertions = StepVerifier.create(walletService.sync())
                 .thenAwait(Duration.of(5, ChronoUnit.SECONDS))
+                .expectNext(true)
                 .expectComplete()
                 .verifyThenAssertThat();
 
