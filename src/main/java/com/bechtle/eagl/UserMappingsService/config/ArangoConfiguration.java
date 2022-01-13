@@ -21,7 +21,7 @@ public class ArangoConfiguration implements com.arangodb.springframework.config.
     public ArangoDB.Builder arango() {
         return
                 new ArangoDB.Builder()
-                        .timeout(1000)
+                        .timeout(10000)
                         .host(url, 8529)
                         .user(user)
                         .password(password);
