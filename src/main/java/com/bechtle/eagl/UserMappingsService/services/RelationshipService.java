@@ -35,6 +35,8 @@ public class RelationshipService {
     @Value("${enmeshed.id.rt}")
     String relationshipTemplateId;
 
+    byte[] cachedToken = null;
+
     private final EnmeshedConnectorClient connectorClient;
     private final RelationshipRepository relationsRepository;
     private final ApplicationEventPublisher eventPublisher;
@@ -69,9 +71,17 @@ public class RelationshipService {
 
 
     public Mono<byte[]> generateToken() {
+        if(cachedToken != null) {
+            return Mono.just(cachedToken);
+        }
+
         return this.connectorClient.getRelationshipTemplate(relationshipTemplateId)
                 .map(RelationshipTemplate::getId)
-                .flatMap(this.connectorClient::getTokenImage);
+                .flatMap(this.connectorClient::getTokenImage)
+                .map(bytes -> {
+                    this.cachedToken = bytes;
+                    return this.cachedToken;
+                });
     }
 
     public Mono<Boolean> sync() {

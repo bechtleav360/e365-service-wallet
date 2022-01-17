@@ -48,10 +48,15 @@ public class WalletApi {
     @GetMapping(value = "/{userId}/token", produces = MediaType.IMAGE_PNG_VALUE)
     public Mono<byte[]> generateToken(@PathVariable String userId) {
         log.debug("(Request) Generate Token image for user '{}'", userId);
-        return Mono.zip(
-                this.userService.flagUser(userId, UserFlags.TOKEN_GENERATED),
-                this.relationshipService.generateToken()
-        ).map(Tuple2::getT2);
+        this.userService
+                .flagUser(userId, UserFlags.TOKEN_GENERATED)
+                .subscribe(user -> {
+                    log.info("User flagged for token generation.");
+                });
+
+
+        return this.relationshipService.generateToken();
+
     }
 
     @PutMapping(value = "/{userId}/code", produces = MediaType.APPLICATION_JSON_VALUE)
