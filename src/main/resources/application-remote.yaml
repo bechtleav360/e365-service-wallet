@@ -1,0 +1,30 @@
+#spring:
+#  datasource:
+#    url: jdbc:h2:file:/data/demo
+
+## All XXX fields are provisioned through environment variables
+
+security:
+  api-key: "XXX"
+
+spring:
+  security:
+    user:
+      name: "xxx"
+      password: "xxx"
+
+enmeshed:
+  connector:
+    url: "http://eagl-enmeshed.germanywestcentral.azurecontainer.io/api/v1"
+    apikey: "XXX"
+  id:
+    rt: "XXX"
+
+logging:
+  level:
+    com:
+      bechtle: DEBUG
+    org:
+      springframework:
+        security: INFO
+

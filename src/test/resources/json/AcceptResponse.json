@@ -1,0 +1,86 @@
+{
+  "result": {
+    "id": "RELMZKQ9YjwTsvCF1wu5",
+    "template": {
+      "id": "RLTtRx6vkZ5TIvZHBca1",
+      "isOwn": true,
+      "createdBy": "id13vBHTsxPY5ExcwttgGeV5hL8Nw5PoJ6PJ",
+      "createdByDevice": "DVCPi90gPspL38g9OJnN",
+      "createdAt": "2022-01-10T19:58:23.476Z",
+      "content": {
+        "attributes": [
+          {
+            "name": "Thing.name",
+            "value": "Lernpfade im Web"
+          },
+          {
+            "name": "Corporation.legalName",
+            "value": "Bechtle GmbH & Co.KG IT System House Bonn/Cologne"
+          },
+          {
+            "name": "Comm.email",
+            "value": "bonn@bechtle.com"
+          },
+          {
+            "name": "Comm.website",
+            "value": "https://www.bechtle.com"
+          }
+        ],
+        "optional": [
+          {
+            "attribute": "Person.givenName"
+          },
+          {
+            "attribute": "Person.familyName"
+          }
+        ]
+      },
+      "expiresAt": "2023-01-01T00:00:00.000Z"
+    },
+    "status": "Active",
+    "peer": "id13mxfinUQPeq6cQfPLy7mn9LnBSv9XVcqL",
+    "peerIdentity": {
+      "address": "id13mxfinUQPeq6cQfPLy7mn9LnBSv9XVcqL",
+      "publicKey": "7mwVLIOW3xpng_E7VKfoZ8fETbBu6gC3i8L3MVk0W6M",
+      "realm": "id1"
+    },
+    "changes": [
+      {
+        "id": "RCHYtxe0ApH6zUHmcgE7",
+        "request": {
+          "createdBy": "id13mxfinUQPeq6cQfPLy7mn9LnBSv9XVcqL",
+          "createdByDevice": "DVCTve61dLBnqflNgopF",
+          "createdAt": "2022-01-10T20:02:19.458Z",
+          "content": {
+            "attributes": {},
+            "identity": {
+              "@type": "Identity",
+              "address": "id13mxfinUQPeq6cQfPLy7mn9LnBSv9XVcqL",
+              "createdAt": "2020-01-01T00:00:00.000Z",
+              "description": "",
+              "name": "",
+              "publicKey": {
+                "pub": "7mwVLIOW3xpng_E7VKfoZ8fETbBu6gC3i8L3MVk0W6M",
+                "alg": 3
+              },
+              "realm": "id1",
+              "type": "unknown"
+            },
+            "type": "RelationshipRequest",
+            "authorizations": {}
+          }
+        },
+        "status": "Accepted",
+        "type": "Creation",
+        "response": {
+          "createdBy": "id13vBHTsxPY5ExcwttgGeV5hL8Nw5PoJ6PJ",
+          "createdByDevice": "DVCPi90gPspL38g9OJnN",
+          "createdAt": "2022-01-10T20:06:00.829Z",
+          "content": {
+            "code": "4123"
+          }
+        }
+      }
+    ]
+  }
+}
